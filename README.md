@@ -33,6 +33,12 @@ docker-compose up -d
 
 * Consider pre-pulling images for challenges so they are on-hand when needed and don't slow down launch times.
 * Install the [CTFd-Ployer Plugin](https://github.com/jselliott/CTFd-ployer-Plugin) on your CTFd instance and configure it.
+* Set up a crontab to run prune.py on a schedule for sweeping old containers. I also used docker system prune to clear unused caches, volumes, etc hourly to prevent things from accumulating.
+
+```
+*/1 * * * * python3 /opt/deployer/prune.py 2>&1
+0 * * * * docker system prune -f 2>&1
+```
 
 ## !!! SECURITY CONSIDERATIONS !!!
 
