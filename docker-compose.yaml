@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  nginx:
+    container_name: deployer-nginx
+    network_mode: host
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /opt/certs/ctf.example.com/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /opt/certs/ctf.example.com/privkey.pem:/etc/ssl/private/privkey.pem:ro
+      - ./nginx/index.html:/usr/share/nginx/html/index.html:ro
+      - ./nginx/rules.html:/usr/share/nginx/html/rules.html:ro
+    depends_on:
+      - launcher
+    restart: unless-stopped
+
+  launcher:
+    container_name: deployer-launcher
+    network_mode: host
+    build: ./launcher
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./nginx/conf.d:/mnt/nginx/conf.d
+      - /tmp/flags:/tmp/flags
+    environment:
+      - BASE_DOMAIN=ctf.example.com
+    restart: unless-stopped
+    command: >
+      uvicorn main:app --host 10.128.0.4 --port 8000 --log-level info
