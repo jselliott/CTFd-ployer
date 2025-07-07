@@ -11,7 +11,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-BASE_DOMAIN = os.getenv("BASE_URL","ctf.example.com")
+BASE_DOMAIN = os.getenv("BASE_DOMAIN","ctf.example.com")
 
 app = FastAPI()
 client = docker.from_env()
