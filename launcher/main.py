@@ -11,7 +11,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-BASE_DOMAIN = os.getenv("BASE_URL","web.ctf.uscybergames.com")
+BASE_DOMAIN = os.getenv("BASE_URL","ctf.example.com")
 
 app = FastAPI()
 client = docker.from_env()
@@ -122,7 +122,7 @@ server {{
 
         return {"url": f"https://{fqdn}", "container": container.id}
     else:
-        return {"url":f'nc challenge.ctf.uscybergames.com {port}', "container": container.id}
+        return {"url":f'nc {BASE_DOMAIN} {port}', "container": container.id}
 
 @app.post("/status")
 def player_status(req: StatusRequest):
